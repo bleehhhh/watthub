@@ -1,5 +1,4 @@
 
-
 local version = game:HttpGet("https://raw.githubusercontent.com/Wattville/Watty-Hub-Public/main/version")
 local ESP = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Sirius/request/library/esp/esp.lua'),true))()
 local ui = loadstring(game:HttpGet("https://pastebin.com/raw/NV63xPd1"))()
@@ -454,6 +453,83 @@ game:GetService("TextChatService").OnIncomingMessage = function(msg)
     end
 end end)();
 
+
+task.spawn(function() LPH_NO_VIRTUALIZE(function()
+    run.RenderStepped:Connect(function()
+        if CheckPlayer(lplr) then lplr.Character.Humanoid.JumpPower = jumppower end
+        if walkspeed ~= 0 and walkspeed ~= 16 and CheckPlayer(lplr) then
+            lplr.Character.Humanoid.WalkSpeed = walkspeed
+        end
+        for _, plr in pairs(game:GetService("Players"):GetPlayers()) do
+            if plr.Name ~= lplr.Name then
+                if hitbox then
+                    if CheckPlayer(plr) and plr.Character:FindFirstChild("HumanoidRootPart").Size ~= Vector3.new(hitboxsize,hitboxsize,hitboxsize) then
+                        pcall(function()
+                            plr.Character.HumanoidRootPart.Size = Vector3.new(hitboxsize,hitboxsize,hitboxsize)
+                            plr.Character.HumanoidRootPart.CanCollide = false
+                            plr.Character.HumanoidRootPart.Transparency = 0.75
+                        end)
+                    end
+                else
+                    if CheckPlayer(plr) and plr.Character:FindFirstChild("HumanoidRootPart").Size ~= Vector3.new(2,2,1) then
+                        pcall(function()
+                            plr.Character.HumanoidRootPart.Size = Vector3.new(2,2,1) -- Sets targets humanoidrootpart back to default
+                            plr.Character.HumanoidRootPart.CanCollide = false
+                            plr.Character.HumanoidRootPart.Transparency = 1
+                        end)
+                    end
+                end
+                if killaura then
+                    if CheckPlayer(plr) and CheckPlayer(lplr) and plr.Character.Humanoid.Health > 0 and lplr:DistanceFromCharacter(plr.Character.HumanoidRootPart.Position) <= 15 then
+                        local tool = lplr.Character and lplr.Character:FindFirstChildOfClass("Tool")
+                        if tool and tool:FindFirstChild("Handle") then
+                            tool:Activate()
+                            for _,part in next, plr.Character:GetChildren() do
+                                if part:IsA("BasePart") then
+                                    firetouchinterest(tool.Handle,part,0)
+                                    firetouchinterest(tool.Handle,part,1)
+                                end
+                            end
+                        end
+                    end
+                end
+                if killplayer and plr == killplayer then
+                    if CheckPlayer(plr) and CheckPlayer(lplr) and plr.Character.Humanoid.Health > 0 and lplr:DistanceFromCharacter(plr.Character.HumanoidRootPart.Position) <= 15 then
+                        for _,toolitem in pairs(lplr.Character:GetChildren()) do
+                            if toolitem:IsA("Tool") and not toolitem:FindFirstChild("SwordScript") then toolitem.Parent = lplr.Backpack end
+                        end
+                        local tool = false
+                        for _,sword in pairs(lplr.Backpack:GetChildren()) do
+                            if sword:FindFirstChild("SwordScript") then
+                                sword.Parent = lplr.Character
+                                tool = lplr.Character and lplr.Character:FindFirstChild(sword.Name)
+                                break
+                            end
+                        end
+                        if lplr.Character:FindFirstChildOfClass("Tool") then
+                            tool = lplr.Character and lplr.Character:FindFirstChildOfClass("Tool")
+                        end
+                        if tool and tool:FindFirstChild("Handle") then
+                            tool:Activate()
+                            for _,part in next, plr.Character:GetChildren() do
+                                if part:IsA("BasePart") then
+                                    firetouchinterest(tool.Handle,part,0)
+                                    firetouchinterest(tool.Handle,part,1)
+                                end
+                            end
+                        end
+                    end
+                end
+                if wksp.CouncilHouse:FindFirstChild("COUNCILONLY") then
+                    wksp.CouncilHouse:FindFirstChild("COUNCILONLY").Parent = nil
+                end
+                if wksp.LeaderTower:FindFirstChild("LEADERONLY") then
+                    wksp.LeaderTower:FindFirstChild("LEADERONLY").Parent = nil
+                end
+            end
+        end
+    end)
+end)(); end)
 
 
 task.spawn(function() LPH_NO_VIRTUALIZE(function()
